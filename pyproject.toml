@@ -1,0 +1,14 @@
+[project]
+name = "paput-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "djlint>=1.36.4",
+    "fastapi[standard]>=0.136.1",
+    "itsdangerous>=2.2.0",
+    "pydantic>=2.13.3",
+    "sqlmodel>=0.0.38",
+    "starlette>=1.0.0",
+]
