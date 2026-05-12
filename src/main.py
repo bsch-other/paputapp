@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
@@ -29,8 +30,9 @@ SessionDep = Annotated[Session, Depends(get_sqlite_session)]
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="passw0rd")
+path = Path(__file__).resolve().parent
 
-templates = Jinja2Templates(directory="src/templates")
+templates = Jinja2Templates(directory=f"{path}/templates")
 
 @app.get("/")
 def index(request: Request):
@@ -44,14 +46,5 @@ def login(request: Request, session: SessionDep, username: Annotated[str, Form()
     uvlog.info(f"User data is: {user}")
     if not user:
         request.session["error"] = "Wrong username or password"
-        return RedirectResponse("http://localhost:8001/", status_code=303)
+        return RedirectResponse("/", status_code=303)
     return templates.TemplateResponse(request=request, name="dashboard.html")
-
-
-@app.get("/users")
-def read_root():
-    return {"Hello": "World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
